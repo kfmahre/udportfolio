@@ -9,9 +9,9 @@ After viewing the classroom recordings of the lessons, I broke this project down
 
 ## Part 1: 90 or above on pagespeed insights for index.html
 
-1. Added print media query to print css to stop its render blocking.
-2. Added async to google analytics.
-3. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights.
+1. Added print media query to print css to stop its render blocking
+2. Added async to google analytics
+3. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights
 
 ![image](96psi.png)
 
