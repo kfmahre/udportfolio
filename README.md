@@ -1,3 +1,20 @@
+## Steps I took to complete this project
+### Goals:
+Part 1: Achieve a pagespeed insights score of above 90 on index.html of the portfolio page.
+Part 2: Optimize the function for resizing pissas on pizza.html to do so in less than 5ms.
+Part 3: Achieve a framerate of 60fps when scrolling in pizza.html.
+Part 4: Make this documentation.
+
+After viewing the classroom recordings of the lessons, I broke this project down into the three parts above. Then added this documentation to the end.
+
+## Part 1: 90 or above on pagespeed insights for index.html
+
+1. Added print media query to print css to stop its render blocking.
+2. Added async to google analytics.
+3. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights.
+
+![image](96psi.png)
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).

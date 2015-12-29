@@ -35,8 +35,4 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-gulpfile.js
-package.json
 node_modules/
-dist/
-ngrok

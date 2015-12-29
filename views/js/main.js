@@ -281,8 +281,8 @@ function getNoun(y) {
       return scifi;
   };
 };
-
-var adjectives = ["dark", "color", "whimsical", "shiny", "noise", "apocalyptic", "insulting", "praise", "scientific"];  // types of adjectives for pizza titles
+/** Noise didn't match in var adjectives array, I changined it to "noisy" as in getAdj(x) **/
+var adjectives = ["dark", "color", "whimsical", "shiny", "noisy", "apocalyptic", "insulting", "praise", "scientific"];  // types of adjectives for pizza titles
 var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "places", "scifi"];                        // types of nouns for pizza titles
 
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
@@ -509,18 +509,21 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 /* Moves the sliding background pizzas based on scroll position */
 
-  /* --------------------------------------------------------------------
-  querySelectorAll is slower than getElementsByClassName, I switched them
-  -------------------------------------------------------------------  */
+/* ----------------------------------------------------------------------
+ querySelectorAll is slower than getElementsByClassName, I switched them
+---------------------------------------------------------------------  */
 
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
+/* --- Moved these variables out of the for-loop --- */
+  var scroll = document.body.scrollTop;
   var items = document.getElementsByClassName('mover');
+  var itemsLength = items.length;
 
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+  for (var i = 0; i < itemsLength; i++) {
+    var phase = Math.sin((scroll / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -537,19 +540,18 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-/* Generates the sliding pizzas when the page loads. */
-  /* -------------------------------------------------------------------------------------------
-  I changed the image for the 'mover' pizzas to the size they were styled to be and then removed
-  styles code, unsure if this really improved performance, but this just made more sence to me.
-  ------------------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------
+I moved the styles code for the sizing of the pizzas to the css to the .mover class
+-------------------------------------------------------------------------------- */
 
+/* - Generates the sliding pizzas when the page loads.  */
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 25; i++) {
+  for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
-    elem.src = "images/pizza2.png";
+    elem.src = "images/pizza.png";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
