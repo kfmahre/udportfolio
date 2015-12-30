@@ -11,7 +11,8 @@ After viewing the classroom lessons and reviewing the code, I broke this project
 
 1. I added print media query to print css to stop its render blocking.
 2. I added async to google analytics.
-3. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights.
+3. I changed the size of the pizzeria picture to match how it's shown on index.html instead of shrinking such a huge image. I named that image pizzeriaMin.png. I also compressed the images using [ImageOptim](https://imageoptim.com/). I replaced Cam's picture with mine and optimized it also.
+4. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights.
 
 ![image](96psi.png)
 
