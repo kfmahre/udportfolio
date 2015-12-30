@@ -518,14 +518,15 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
 /* --- Moved these variables out of the for-loop --- */
-  var scroll = document.body.scrollTop;
+  var scroll = (document.body.scrollTop / 1250);
   var items = document.getElementsByClassName('mover');
   var itemsLength = items.length;
 
   for (var i = 0; i < itemsLength; i++) {
-    var phase = Math.sin((scroll / 1250) + (i % 5));
+    var phase = Math.sin(scroll + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
+
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -548,13 +549,19 @@ I moved the styles code for the sizing of the pizzas to the css to the .mover cl
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
+  var rows = Math.floor(window.screen.height / s);
+  var elementNumber = cols * rows;
+  var elem = [];
+  var appendElementsHere = document.querySelector("#movingPizzas1");
+
+
+  for (var i = 0; i < elementNumber; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    appendElementsHere.appendChild(elem);
   }
   updatePositions();
 });

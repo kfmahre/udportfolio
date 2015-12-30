@@ -80,6 +80,8 @@ After viewing the classroom lessons and reviewing the code, I broke this project
 
 ## Part 3: 60fps on scroll in pizza.html
 
+Special thanks to mcs, forum mentor on Udacity's discussion forum. He really helped me get the ball rolling on this part of the project after I read this [post](https://discussions.udacity.com/t/project-4-how-do-i-optimize-the-background-pizzas-for-loop/36302). Also, thanks to for posting the [office hours](https://github.com/udacity/fend-office-hours/blob/master/Web%20Optimization/Effective%20Optimizations%20for%2060%20FPS/README.md).
+
 1. I moved the DOM calculations out of the for-loop within updatePositions. Also, I changed out querySelectorAll for getElementsByClassName
 
 * Original Code:
@@ -170,6 +172,45 @@ document.addEventListener('DOMContentLoaded', function() {
 * My results from those changes were good, but not good enough:
 
 ![image](img/49fps.png)
+
+* My attempt to optimize things further in updatepositions:
+``` bash
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+/* --- Moved these variables out of the for-loop --- */
+  var scroll = (document.body.scrollTop / 1250);
+  var items = document.getElementsByClassName('mover');
+  var itemsLength = items.length;
+
+  for (var i = 0; i < itemsLength; i++) {
+    var phase = Math.sin(scroll + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+```
+* And then in addEventListener('DOMContentLoaded')
+``` bash
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  var rows = Math.floor(window.screen.height / s);
+  var elementNumber = cols * rows;
+  var elem = [];
+  var appendElementsHere = document.querySelector("#movingPizzas1");
+
+
+  for (var i = 0; i < elementNumber; i++) {
+    elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    appendElementsHere.appendChild(elem);
+  }
+  updatePositions();
+});
+```
 
 ## Website Performance Optimization portfolio project
 
