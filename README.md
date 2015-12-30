@@ -18,6 +18,66 @@ After viewing the classroom lessons and reviewing the code, I broke this project
 
 ## Part 2: Pizza resize in pizza.html in less than 5ms
 
+* Original Code
+
+``` bash
+  function changePizzaSizes(size) {
+    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    }
+  }
+
+  changePizzaSizes(size);
+}
+```
+* First Changes
+
+``` bash
+  function changePizzaSizes(size) {
+
+      var dx = determineDx(document.getElementsByClassName("randomPizzaContainer")[1], size);
+      var newwidth = (document.getElementsByClassName("randomPizzaContainer")[1].offsetWidth + dx) + 'px';
+      // Made this new variable from what was once the start of the function
+      var pizzaContainerLength = document.getElementsByClassName("randomPizzaContainer").length;
+    /* ---------------------------------------------
+    I moved the for loop down here in the function,
+    so that it calculates the variables first
+    --------------------------------------------- */
+    for (var i = 0; i < pizzaContainerLength; i++) {
+      document.getElementsByClassName("randomPizzaContainer")[i].style.width = newwidth;
+    }
+  }
+
+  changePizzaSizes(size);
+}
+```
+* This got me to 2.44ms, well below 5ms. Then I noticed I could make it simpler:
+
+* More Changes
+```bash
+  function changePizzaSizes(size) {
+
+      var dx = determineDx(document.getElementsByClassName("randomPizzaContainer")[1], size);
+      var newwidth = (document.getElementsByClassName("randomPizzaContainer")[1].offsetWidth + dx) + 'px';
+      // Made this new variable from what was once the start of the function
+      var pizzaElements = document.getElementsByClassName("randomPizzaContainer");
+    /* ---------------------------------------------
+    I moved the for loop down here in the function,
+    so that it calculates the variables first
+    --------------------------------------------- */
+    for (var i = 0; i < pizzaElements.length; i++) {
+      pizzaElements[i].style.width = newwidth;
+    }
+  }
+
+  changePizzaSizes(size);
+}
+```
+* That small change brought me from an average 2.44ms to 2.25ms
+
+
 ## Part 3: 60fps on scroll in pizza.html
 
 1. I moved the DOM calculations out of the for-loop within updatePositions. Also, I changed out querySelectorAll for getElementsByClassName
