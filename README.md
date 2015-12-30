@@ -14,7 +14,102 @@ After viewing the classroom lessons and reviewing the code, I broke this project
 3. I changed the size of the pizzeria picture to match how it's shown on index.html instead of shrinking such a huge image. I named that image pizzeriaMin.png. I also compressed the images using [ImageOptim](https://imageoptim.com/). I replaced Cam's picture with mine and optimized it also.
 4. I'm a newbie at gulp, so this part took me a little bit to figure out. I minified inlined the CSS. This part got me to where I needed to be as far as pagespeed insights.
 
-![image](96psi.png)
+![image](img/96psi.png)
+
+## Part 2: Pizza resize in pizza.html in less than 5ms
+
+## Part 3: 60fps on scroll in pizza.html
+
+1. I moved the DOM calculations out of the for-loop within updatePositions. Also, I changed out querySelectorAll for getElementsByClassName
+
+* Original Code:
+``` bash
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+  var items = document.querySelectorAll('.mover');
+  for (var i = 0; i < items.length; i++) {
+    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+ }
+```
+* What I did:
+``` bash
+/* ----------------------------------------------------------------------
+ querySelectorAll is slower than getElementsByClassName, I switched them
+---------------------------------------------------------------------  */
+
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+/* --- Moved these variables out of the for-loop --- */
+  var scroll = document.body.scrollTop;
+  var items = document.getElementsByClassName('mover');
+  var itemsLength = items.length;
+
+  for (var i = 0; i < itemsLength; i++) {
+    var phase = Math.sin((scroll / 1250) + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+ }
+```
+
+2. I moved styles out of the JavaScript and into the CSS .mover class
+
+* Original code:
+``` bash
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  for (var i = 0; i < 200; i++) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.style.height = "100px";
+    elem.style.width = "73.333px";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }
+  updatePositions();
+}
+```
+
+* My Code in main.js:
+``` bash
+/* --------------------------------------------------------------------------------
+I moved the styles code for the sizing of the pizzas to the css to the .mover class
+-------------------------------------------------------------------------------- */
+
+/* - Generates the sliding pizzas when the page loads.  */
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  for (var i = 0; i < 200; i++) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }
+  updatePositions();
+}
+```
+* style.css:
+``` bash
+.mover {
+  position: fixed;
+  width: 73px;
+  z-index: -1;
+}
+```
+* My results from those changes were good, but not good enough:
+
+![image](img/49fps.png)
 
 ## Website Performance Optimization portfolio project
 
