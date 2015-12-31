@@ -212,6 +212,63 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 ```
 
+Throwing requestAnimationFrame into the mix:
+``` bash
+function updatePositions() {
+  animating = false;
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+/* --- Moved these variables out of the for-loop --- */
+  var scroll = (document.body.scrollTop / 1250);
+  var items = document.getElementsByClassName('mover');
+  var itemsLength = items.length;
+
+  for (var i = 0; i < itemsLength; i++) {
+    var phase = Math.sin(scroll + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+```
+``` bash
+window.addEventListener('scroll', rAf);
+
+function rAf() {
+  if(!animating) {
+    requestAnimationFrame(updatePositions);
+  }
+  animating = true;
+}
+```
+* & also going back to the styles within the script as they were before, except I corrected the perportions of the image
+```bash
+/* - Generates the sliding pizzas when the page loads.  */
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  var rows = Math.floor(window.screen.height / s);
+  var elementNumber = cols * rows;
+  var elem = [];
+  var appendElementsHere = document.querySelector("#movingPizzas1");
+
+
+  for (var i = 0; i < elementNumber; i++) {
+    elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.style.height = "100px";
+    elem.style.width = "77.333px"; // corrected the proportion of the pizza
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    appendElementsHere.appendChild(elem);
+  }
+  updatePositions();
+});
+```
+![image](img/paintprob.png)
+
+* So much for fixing all this with optimizations. Time to learn how to use Translate!
+
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).

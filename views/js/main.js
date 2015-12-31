@@ -514,6 +514,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 ---------------------------------------------------------------------  */
 
 function updatePositions() {
+  animating = false;
   frame++;
   window.performance.mark("mark_start_frame");
 
@@ -538,12 +539,15 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+// runs updatePositions on scroll...
+window.addEventListener('scroll', rAf);
 
-/* --------------------------------------------------------------------------------
-I moved the styles code for the sizing of the pizzas to the css to the .mover class
--------------------------------------------------------------------------------- */
+function rAf() {
+  if(!animating) {
+    requestAnimationFrame(updatePositions);
+  }
+  animating = true;
+}
 
 /* - Generates the sliding pizzas when the page loads.  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -559,6 +563,8 @@ document.addEventListener('DOMContentLoaded', function() {
     elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
+    elem.style.height = "100px";
+    elem.style.width = "77.333px"; // corrected the proportion of the pizza
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     appendElementsHere.appendChild(elem);
