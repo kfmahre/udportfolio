@@ -519,13 +519,15 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
 /* --- Moved these variables out of the for-loop --- */
-  var scroll = (document.body.scrollTop / 1250);
+  var scroll = document.body.scrollTop / 1250;
   var items = document.getElementsByClassName('mover');
   var itemsLength = items.length;
 
   for (var i = 0; i < itemsLength; i++) {
     var phase = Math.sin(scroll + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    var transX = items[i].basicLeft + 100 * phase + 'px';
+    items[i].style.transform =  'translateX('+transX+')';
+    //items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
 
@@ -554,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var rows = Math.floor(window.screen.height / s);
-  var elementNumber = cols * rows;
+  var elementNumber = cols * rows; //
   var elem = [];
   var appendElementsHere = document.querySelector("#movingPizzas1");
 
