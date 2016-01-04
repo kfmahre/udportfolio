@@ -266,7 +266,94 @@ document.addEventListener('DOMContentLoaded', function() {
 ```
 ![image](img/paintprob.png)
 
-* So much for fixing all this with optimizations. Time to learn how to use Translate!
+* So much for fixing all this with optimizations. Time to learn how to use Translate:
+
+```bash
+var items = []; // makes items a global value on DOMcontentLoaded
+var itemsLength = []; // makes itemsLength global
+
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+/* --- Moved these variables out of the for-loop --- */
+  var scroll = document.body.scrollTop / 1250;
+
+  for (var i = 0; i < itemsLength; i++) {
+    var phase = Math.sin(scroll + (i % 5));
+    /* When I originally created transX and used it to change the style to transform, it moved
+     everything right and off the screen partially, I fixed that with CSS */
+    var transX = items[i].basicLeft + 100 * phase + 'px';
+    items[i].style.transform =  'translateX('+transX+')';
+    //items[i].style.left = items[i].basicLeft + 100 * phase + 'px'; < original code I saved for experimental purposes
+  }
+  window.animating = false;
+
+  // User Timing API to the rescue again. Seriously, it's worth learning.
+  // Super easy to create custom metrics.
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+  }
+}
+
+// runs updatePositions on scroll...
+//window.addEventListener('scroll', updatePositions); < original code
+
+window.addEventListener('scroll', rAf);
+
+  function rAf() {
+  if(!window.animating) {
+    window.animating = true;
+    requestAnimationFrame(updatePositions);
+  }
+}
+
+/* - Generates the sliding pizzas when the page loads.  */
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  // I moved as much stuff as I could out of the for-loop
+  var rows = Math.floor(window.screen.height / s); // finds the number of rows by dividing the height of the screen in pixels by the pixels size of each row of moving pizzas
+  var elementNumber = cols * rows; // decides the number of elements there will be by multiplying the cols by rows
+  var appendElementsHere = document.querySelector("#movingPizzas1");
+
+
+  for (var i = 0; i < elementNumber; i++) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    /* corrected the proportion of the pizza
+     and moved it's style to CSS */
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    appendElementsHere.appendChild(elem);
+  }
+// I moved this from updatepositions so that they are pre-loaded global values
+  items = document.getElementsByClassName('mover'); // & changed from querySelectorAll
+  itemsLength = items.length;
+  updatePositions();
+});
+```
+Changes: style.css
+```bash
+.mover {
+  position: fixed;
+  width: 77.333px;
+  height: 100px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  backface-visibility: hidden;
+}
+```
+
+Paint flashing of the background pizza's is gone! Thanks andrew_R [for this](https://discussions.udacity.com/t/no-jank-or-lost-frames-that-i-can-see-but-dev-tools-does/42706/2?u=kyle_m) advise on how to use the dev tools, which are very different from in the lessons.
+
+
+Special thanks to mcs once again for his guidance on the forums [here](https://discussions.udacity.com/t/optimizing-updatepositions-and-paint/40633),[here](https://discussions.udacity.com/t/ive-achieved-60fps-mostly-but-still-have-jank-any-clues/37267/10), and [here](https://discussions.udacity.com/t/how-do-i-know-if-this-is-above-or-below-60fps/36763). To get translate to work properly I had to fidget with CSS, but it looks good and it seems to be performant to me.
 
 
 ## Website Performance Optimization portfolio project
